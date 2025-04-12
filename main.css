@@ -1,0 +1,21 @@
+h1 {
+    color: black;
+    font-size: 4em;
+    font-family: Arial, sans-serif;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+td {
+    border: 1px solid black;
+    padding: 10px;
+}
+tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
