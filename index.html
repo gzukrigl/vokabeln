@@ -31,8 +31,7 @@
             return true;
         }
 
-        function proceed_to_next_word() {
-            var latest_word = vokabeln[i].word;
+        function proceed_to_next_word(latest_word, vokabeln) {
             if (vokabeln.length == 0) {
                 $('#firework').show();
                 $('#vokabeln_form').hide();
@@ -46,15 +45,18 @@
                     i = Math.floor(Math.random() * vokabeln.length);
                 } while (vokabeln[i].word == latest_word && !are_all_words_identical(vokabeln));
                 $('#translation_input').val("");
+                console.log(i);
                 $('#word_output').val(vokabeln[i].word);
+                $('#vokabeln_form').show();
             }        
             $('#error_message').hide();
-            $('#vokabeln_form').show();
             $('#translation_input').focus();
+            return i;
         }
 
         $(document).ready(function(){
             vokabeln = [];
+            i = 0;
             $('#vokabeln_form').hide();
             $('#firework').hide();
             $('#error_message').hide();
@@ -62,11 +64,12 @@
             $('#check').click(function(event){
                 event.preventDefault();
                 var input = jQuery('#translation_input').val();
+                var latest_word = vokabeln[i].word;
 
                 if (input_is_ok(input.trim(), vokabeln[i].translation)) {
                     vokabeln.splice(i,1);
                     console.log(vokabeln);
-                    proceed_to_next_word();
+                    i = proceed_to_next_word(latest_word, vokabeln);
                 } else {
                     $('#vokabeln_form').hide();
                     $('#error_message_text').text("Falsch! Die richtige Antwort ist: " + vokabeln[i].translation);
@@ -76,12 +79,12 @@
             $('#false_error_message').click(function(event){
                 event.preventDefault();
                 vokabeln.splice(i,1);
-                proceed_to_next_word();
+                i = proceed_to_next_word(latest_word, vokabeln);
 
             });
             $('#error_message_ok').click(function(event){
                 event.preventDefault();
-                proceed_to_next_word();
+                i = proceed_to_next_word(latest_word, vokabeln);
             });
 
             // Enter-Taste für den "Weiter"-Button abfangen
