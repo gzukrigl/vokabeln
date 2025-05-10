@@ -2,12 +2,31 @@ h1 {
     color: rgb(48, 44, 154);
     font-size: 4em;
     font-family: Arial, sans-serif;
+    align-content: center;
+    text-align: center;
 }
+
+#start_panel {
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* For inline text alignment */
+    height: 100vh;
+}
+
+#vokabeln_form {
+    display: flex; /* Flexbox aktivieren */
+    justify-content: center; /* Horizontal zentrieren */
+    align-items: center; /* Vertikal zentrieren */
+    text-align: center; /* Für Textausrichtung */
+    height: 30vh; /* Vollbildhöhe */
+}
+
 
 table {
     border: 1px solid black;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
+    text-align: center;
 }
 td {
     border: 1px solid black;

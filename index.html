@@ -1,6 +1,7 @@
 <html>
   <head>
      <title>Vokabeln</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <script src="lib/jquery.min.js"></script>
         <link rel="stylesheet" href="main.css">
      <script>
@@ -17,6 +18,19 @@
             return false;
         }
 
+        function are_all_words_identical(vokabeln) {
+            if (vokabeln.length == 0) {
+                return false;
+            }
+            const first_word = vokabeln[0].word;
+            for (let i = 1; i < vokabeln.length; i++) {
+                if (vokabeln[i].word !== first_word) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         $(document).ready(function(){
             vokabeln = [];
             $('#vokabeln_form').hide();
@@ -26,6 +40,7 @@
             $('#check').click(function(event){
                 event.preventDefault();
                 var input = jQuery('#translation_input').val();
+                var latest_word = vokabeln[i].word;
 
                 if (input_is_ok(input.trim(), vokabeln[i].translation)) {
                     vokabeln.splice(i,1);
@@ -45,7 +60,9 @@
                     $('#file_input').val('')
                     $('#start_panel').show();
                 } else {
-                    i = Math.floor(Math.random() * vokabeln.length);
+                    do {
+                        i = Math.floor(Math.random() * vokabeln.length);
+                    } while (vokabeln[i].word == latest_word && !are_all_words_identical(vokabeln));
                     jQuery('#translation_input').val("");
                     jQuery('#word_output').val(vokabeln[i].word);
                 }
@@ -126,11 +143,13 @@
             <input type="range" id="anzahl_wiederholungen" min="1" max="10" value="3">
             <span id="slider_value">3</span>
         </div>
-        <input type="file" id="file_input" accept=".csv">
+        <div>
+            <input type="file" id="file_input" accept=".csv">
+        </div>
     </div>
 
     <form id="vokabeln_form">
-        <table style="border: 1px solid black; margin: 0px; padding: 0px;">
+        <table id="vokabeln_table" style="border: 1px solid black; margin: 1px; padding: 0px;">
             <tr>
                 <td>Vokabel</td>
                 <td><input id="word_output" type="text" readonly value="cat"></td>
@@ -148,7 +167,7 @@
         </table>
         
     </form>
-    <img src="feuerwerk.gif" id = "firework">
+    <img src="feuerwerk.gif" id="firework" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;">
     <div id="error_message">
         <div id="error_message_text">Blödmann!</div>
         <button id="error_message_ok">Weiter</button>
