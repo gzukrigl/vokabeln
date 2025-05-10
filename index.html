@@ -31,6 +31,28 @@
             return true;
         }
 
+        function proceed_to_next_word() {
+            var latest_word = vokabeln[i].word;
+            if (vokabeln.length == 0) {
+                $('#firework').show();
+                $('#vokabeln_form').hide();
+                setTimeout(function() {
+                    $('#firework').hide();
+                }, 5000);
+                $('#file_input').val('')
+                $('#start_panel').show();
+            } else {
+                do {
+                    i = Math.floor(Math.random() * vokabeln.length);
+                } while (vokabeln[i].word == latest_word && !are_all_words_identical(vokabeln));
+                $('#translation_input').val("");
+                $('#word_output').val(vokabeln[i].word);
+            }        
+            $('#error_message').hide();
+            $('#vokabeln_form').show();
+            $('#translation_input').focus();
+        }
+
         $(document).ready(function(){
             vokabeln = [];
             $('#vokabeln_form').hide();
@@ -40,40 +62,26 @@
             $('#check').click(function(event){
                 event.preventDefault();
                 var input = jQuery('#translation_input').val();
-                var latest_word = vokabeln[i].word;
 
                 if (input_is_ok(input.trim(), vokabeln[i].translation)) {
                     vokabeln.splice(i,1);
                     console.log(vokabeln);
+                    proceed_to_next_word();
                 } else {
                     $('#vokabeln_form').hide();
                     $('#error_message_text').text("Falsch! Die richtige Antwort ist: " + vokabeln[i].translation);
                     $('#error_message').show();
                 }
-
-                if(vokabeln.length == 0){
-                    $('#firework').show();
-                    $('#vokabeln_form').hide();
-                    setTimeout(function() {
-                        $('#firework').hide();
-                    }, 5000);
-                    $('#file_input').val('')
-                    $('#start_panel').show();
-                } else {
-                    do {
-                        i = Math.floor(Math.random() * vokabeln.length);
-                    } while (vokabeln[i].word == latest_word && !are_all_words_identical(vokabeln));
-                    jQuery('#translation_input').val("");
-                    jQuery('#word_output').val(vokabeln[i].word);
-                }
-
             }); 
+            $('#false_error_message').click(function(event){
+                event.preventDefault();
+                vokabeln.splice(i,1);
+                proceed_to_next_word();
 
+            });
             $('#error_message_ok').click(function(event){
                 event.preventDefault();
-                $('#error_message').hide();
-                $('#vokabeln_form').show();
-                $('#translation_input').focus();
+                proceed_to_next_word();
             });
 
             // Enter-Taste für den "Weiter"-Button abfangen
@@ -171,6 +179,7 @@
     <div id="error_message">
         <div id="error_message_text">Blödmann!</div>
         <button id="error_message_ok">Weiter</button>
+        <button id="false_error_message">Stimmt doch</button>
     </div>
   </body>
 </html>
