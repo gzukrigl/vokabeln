@@ -53,6 +53,7 @@
             $('#translation_input').focus();
             return i;
         }
+        var latest_word = "";
 
         $(document).ready(function(){
             vokabeln = [];
@@ -64,7 +65,7 @@
             $('#check').click(function(event){
                 event.preventDefault();
                 var input = jQuery('#translation_input').val();
-                var latest_word = vokabeln[i].word;
+                latest_word = vokabeln[i].word;
 
                 if (input_is_ok(input.trim(), vokabeln[i].translation)) {
                     vokabeln.splice(i,1);
@@ -76,14 +77,18 @@
                     $('#error_message').show();
                 }
             }); 
+
             $('#false_error_message').click(function(event){
                 event.preventDefault();
+                console.log("Falschmeldung bestätigt");
                 vokabeln.splice(i,1);
                 i = proceed_to_next_word(latest_word, vokabeln);
 
             });
+            
             $('#error_message_ok').click(function(event){
                 event.preventDefault();
+                console
                 i = proceed_to_next_word(latest_word, vokabeln);
             });
 
@@ -151,11 +156,11 @@
     <div id ="start_panel">
         <div>
             <label for="slider">Anzahl Wiederholungen:</label>
-            <input type="range" id="anzahl_wiederholungen" min="1" max="10" value="3">
+            <input type="range" id="anzahl_wiederholungen" min="1" max="10" value="3" title="Anzahl Wiederholungen">
             <span id="slider_value">3</span>
         </div>
         <div>
-            <input type="file" id="file_input" accept=".csv">
+            <input type="file" id="file_input" accept=".csv" title="CSV-Datei mit Vokabeln (Format: Wort;Übersetzung)">
         </div>
     </div>
 
@@ -163,12 +168,12 @@
         <table id="vokabeln_table" style="border: 1px solid black; margin: 1px; padding: 0px;">
             <tr>
                 <td>Vokabel</td>
-                <td><input id="word_output" type="text" readonly value="cat"></td>
+                <td><input title="output" id="word_output" type="text" readonly value="cat"></td>
             </tr>
             <tr>
                 <td>Übersetzung</td>
                 <td>
-                    <input id="translation_input" type="text" value="">
+                    <input title="input" id="translation_input" type="text" value="">
                 </td>
             </tr>
             <tr>
@@ -178,7 +183,7 @@
         </table>
         
     </form>
-    <img src="feuerwerk.gif" id="firework" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;">
+    <img src="feuerwerk.gif" id="firework" alt="Feuerwehr um das Fertigstellen zu feiern">
     <div id="error_message">
         <div id="error_message_text">Blödmann!</div>
         <button id="error_message_ok">Weiter</button>
