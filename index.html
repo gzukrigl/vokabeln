@@ -80,7 +80,6 @@
 
             $('#false_error_message').click(function(event){
                 event.preventDefault();
-                console.log("Falschmeldung bestätigt");
                 vokabeln.splice(i,1);
                 i = proceed_to_next_word(latest_word, vokabeln);
 
@@ -88,7 +87,6 @@
             
             $('#error_message_ok').click(function(event){
                 event.preventDefault();
-                console
                 i = proceed_to_next_word(latest_word, vokabeln);
             });
 
