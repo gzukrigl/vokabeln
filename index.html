@@ -52,6 +52,7 @@
             console.log(are_all_words_identical([{word: "Katze", translation: "cat"}, {word: "Hund", translation: "dog"}])); // false
             console.log(are_all_words_identical([])); // false
         }
+
         function proceed_to_next_word(latest_word, vokabeln) {
             if (vokabeln.length == 0) {
                 $('#firework').show();
@@ -66,7 +67,6 @@
                     i = Math.floor(Math.random() * vokabeln.length);
                 } while (vokabeln[i].word == latest_word && !are_all_words_identical(vokabeln));
                 $('#translation_input').val("");
-                console.log(i);
                 $('#word_output').val(vokabeln[i].word);
                 $('#vokabeln_form').show();
             }        
@@ -75,6 +75,8 @@
             return i;
         }
         var latest_word = "";
+
+
 
         $(document).ready(function(){
             vokabeln = [];
@@ -96,8 +98,30 @@
                     $('#vokabeln_form').hide();
                     $('#error_message_text').text("Falsch! Die richtige Antwort ist: " + vokabeln[i].translation);
                     $('#error_message').show();
+                    $('#error_message_ok').focus();
                 }
             }); 
+
+            $('#teach_button').click(function(event) {
+                event.preventDefault();
+                $('#translation_input').hide();
+                $('#learn_value').show();
+                $('#learn_value').text(vokabeln[i].translation);
+                $('#teach_button').hide();
+                $('#check').hide();
+                $('#continue').show().focus();
+            });
+
+            $('#continue').click(function(event) {
+                event.preventDefault();
+                $('#translation_input').show();
+                $('#learn_value').hide();
+                $('#teach_button').show();
+                $('#check').show();
+                $('#continue').hide();
+                $('#learn_value').hide();
+                i = proceed_to_next_word(latest_word, vokabeln);
+            });
 
             $('#false_error_message').click(function(event){
                 event.preventDefault();
@@ -109,14 +133,6 @@
             $('#error_message_ok').click(function(event){
                 event.preventDefault();
                 i = proceed_to_next_word(latest_word, vokabeln);
-            });
-
-            // Enter-Taste für den "Weiter"-Button abfangen
-            $(document).on('keydown', function(event) {
-                if (event.key === "Enter" && $('#error_message').is(':visible')) {
-                    event.preventDefault(); // Verhindert das Standardverhalten
-                    $('#error_message_ok').click(); // Klick-Event des Buttons auslösen
-                }
             });
 
             $('#file_input').on('change', function(event) {
@@ -147,12 +163,14 @@
                             })
 
                             console.log("Vokabeln geladen:", vokabeln);
-                            console.log(vokabeln[0].word)
                             i = Math.floor(Math.random() * vokabeln.length);
                             jQuery('#translation_input').val("");
                             jQuery('#word_output').val(vokabeln[i].word);
                             $('#vokabeln_form').show();
+                            $('#learn_button').show();
+                            $('#continue').hide();
                             $('#start_panel').hide();
+                            $('#learn_value').hide();
                         } catch (error) {
                             alert("Fehler beim Laden der Datei: " + error.message);
                         }
@@ -166,7 +184,6 @@
                     $('#slider_value').text($(this).val()); // Aktualisiert den Wert in Echtzeit
                 });
             });
-
         });
         </script>
   </head>
@@ -193,10 +210,15 @@
                 <td>Übersetzung</td>
                 <td>
                     <input title="input" id="translation_input" type="text" value="">
+                    <span id="learn_value">Hier kommt der Lernmodus-Ausgaben-Text hin.</span>
+                    <input title="button" id="teach_button" type="button" value="Lernen">
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><button id="check">Check</button></td>
+                <td colspan="2">
+                    <button id="check">Check</button>
+                    <button id="continue">Weiter</button>
+                </td>
 
             </tr>
         </table>
