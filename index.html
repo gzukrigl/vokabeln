@@ -45,7 +45,13 @@
             }
             return true;
         }
-
+        
+        function test_are_all_words_identical() {
+            console.log(are_all_words_identical([{word: "Katze", translation: "cat"}])); // true
+            console.log(are_all_words_identical([{word: "Katze", translation: "cat"}, {word: "Katze", translation: "cat"}])); // true
+            console.log(are_all_words_identical([{word: "Katze", translation: "cat"}, {word: "Hund", translation: "dog"}])); // false
+            console.log(are_all_words_identical([])); // false
+        }
         function proceed_to_next_word(latest_word, vokabeln) {
             if (vokabeln.length == 0) {
                 $('#firework').show();
