@@ -6,17 +6,32 @@
         <link rel="stylesheet" href="main.css">
      <script>
         function input_is_ok(input_text, correct_answer) {
-            if (input_text == correct_answer) {
-                return true;
-            }
-            if (correct_answer.startsWith('to ')) {
-                correct_answer = correct_answer.substring(3);
-                if (input_text == correct_answer) {
+            let correct_answers = correct_answer.split(",");
+            for(let i = 0; i < correct_answers.length; i++) {            
+                single_correct_answer = correct_answers[i].trim();  
+                if (single_correct_answer.startsWith('to ')) {
+                    single_correct_answer = single_correct_answer.substring(3).trim();
+                }
+                if (input_text.startsWith('to ')) {
+                    input_text = input_text.substring(3).trim();
+                }
+                if (input_text == single_correct_answer) {
                     return true;
                 }
             }
             return false;
         }
+
+        function test_input_is_ok() {
+            console.log(input_is_ok("Katze", "Katze"));
+            console.log(input_is_ok("cat", "Katze, cat, Katze"));
+            console.log(input_is_ok("Katze", "Katze, cat, Katze"));
+            console.log(input_is_ok("Katze", "Katze, Hund, Katze"));
+            console.log(input_is_ok("Hund", "Katze, Hund, Katze"));
+            console.log(input_is_ok("to speak", "to talk, to speak"));
+            console.log(input_is_ok("laufen", "laufen, to run"));
+            console.log(!input_is_ok("Clemens", "Gerald"));
+        }   
 
         function are_all_words_identical(vokabeln) {
             if (vokabeln.length == 0) {
