@@ -15,22 +15,29 @@
                 if (input_text.startsWith('to ')) {
                     input_text = input_text.substring(3).trim();
                 }
-                if (input_text == single_correct_answer) {
-                    return true;
+                if (input_text.toLowerCase() == single_correct_answer.toLowerCase()) {
+                    if(input_text == single_correct_answer) {
+                        return "correct";
+                    } else {
+                        return "warning";
+                    }
                 }
             }
-            return false;
+            return "wrong";
         }
 
         function test_input_is_ok() {
-            console.log(input_is_ok("Katze", "Katze"));
-            console.log(input_is_ok("cat", "Katze, cat, Katze"));
-            console.log(input_is_ok("Katze", "Katze, cat, Katze"));
-            console.log(input_is_ok("Katze", "Katze, Hund, Katze"));
-            console.log(input_is_ok("Hund", "Katze, Hund, Katze"));
-            console.log(input_is_ok("to speak", "to talk, to speak"));
-            console.log(input_is_ok("laufen", "laufen, to run"));
-            console.log(!input_is_ok("Clemens", "Gerald"));
+            console.log(input_is_ok("Katze", "Katze")=="correct");
+            console.log(input_is_ok("cat", "Katze, cat, Katze")=="correct");
+            console.log(input_is_ok("Katze", "Katze, cat, Katze")=="correct");
+            console.log(input_is_ok("Katze", "Katze, Hund, Katze")=="correct");
+            console.log(input_is_ok("Hund", "Katze, Hund, Katze")=="correct");
+            console.log(input_is_ok("to speak", "to talk, to speak")=="correct");
+            console.log(input_is_ok("laufen", "laufen, to run")=="correct");
+            console.log(input_is_ok("Clemens", "Gerald")=="wrong");
+            console.log(input_is_ok("kaTze", "Katze")=="warning");
+            console.log(input_is_ok("kaTze", "Hund, Katze")=="warning");
+
         }   
 
         function are_all_words_identical(vokabeln) {
@@ -79,26 +86,37 @@
 
 
         $(document).ready(function(){
+            test_input_is_ok();
             vokabeln = [];
             i = 0;
             $('#vokabeln_form').hide();
             $('#firework').hide();
             $('#error_message').hide();
+            $('#warning_row').hide();
 
             $('#check').click(function(event){
                 event.preventDefault();
+                $('#warning_row').hide();
                 var input = jQuery('#translation_input').val();
                 latest_word = vokabeln[i].word;
-
-                if (input_is_ok(input.trim(), vokabeln[i].translation)) {
-                    vokabeln.splice(i,1);
-                    console.log(vokabeln);
-                    i = proceed_to_next_word(latest_word, vokabeln);
-                } else {
-                    $('#vokabeln_form').hide();
-                    $('#error_message_text').text("Falsch! Die richtige Antwort ist: " + vokabeln[i].translation);
-                    $('#error_message').show();
-                    $('#error_message_ok').focus();
+                switch(input_is_ok(input.trim(), vokabeln[i].translation)) {
+                    case "correct":
+                        vokabeln.splice(i,1);
+                        console.log(vokabeln);
+                        i = proceed_to_next_word(latest_word, vokabeln);
+                        break;
+                    case "warning":
+                        vokabeln.splice(i,1);
+                        console.log(vokabeln);
+                        i = proceed_to_next_word(latest_word, vokabeln);
+                        $('#warning_row').show();
+                        break;
+                    case "wrong":
+                        $('#vokabeln_form').hide();
+                        $('#error_message_text').text("Falsch! Die richtige Antwort ist: " + vokabeln[i].translation);
+                        $('#error_message').show();
+                        $('#error_message_ok').focus();
+                        break;
                 }
             }); 
 
@@ -202,6 +220,11 @@
 
     <form id="vokabeln_form">
         <table id="vokabeln_table" style="border: 1px solid black; margin: 1px; padding: 0px;">
+            <tr id="warning_row">
+                <td colspan="2">
+                    <span id="warning_text">Bitte achte auf Gro&szlig;-/Kleinschreibung</span>
+                </td>
+            </tr>
             <tr>
                 <td>Vokabel</td>
                 <td><input title="output" id="word_output" type="text" readonly value="cat"></td>
