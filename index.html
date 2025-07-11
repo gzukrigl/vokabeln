@@ -79,15 +79,20 @@
             }        
             $('#error_message').hide();
             $('#translation_input').focus();
+            adjust_progress_bar();
             return i;
         }
         var latest_word = "";
 
-
+        function adjust_progress_bar() {
+            $('#progress_bar').attr('value', anzahl_alle_vokabeln - vokabeln.length);
+            $('#progress_value').text(anzahl_alle_vokabeln - vokabeln.length);
+        }
 
         $(document).ready(function(){
             test_input_is_ok();
             vokabeln = [];
+            anzahl_alle_vokabeln = 0;
             i = 0;
             $('#vokabeln_form').hide();
             $('#firework').hide();
@@ -145,7 +150,6 @@
                 event.preventDefault();
                 vokabeln.splice(i,1);
                 i = proceed_to_next_word(latest_word, vokabeln);
-
             });
             
             $('#error_message_ok').click(function(event){
@@ -189,6 +193,9 @@
                             $('#continue').hide();
                             $('#start_panel').hide();
                             $('#learn_value').hide();
+                            $('#progress_bar').attr('max', vokabeln.length);
+                            anzahl_alle_vokabeln = vokabeln.length;
+                            $('#total_value').text(anzahl_alle_vokabeln);
                         } catch (error) {
                             alert("Fehler beim Laden der Datei: " + error.message);
                         }
@@ -220,6 +227,13 @@
 
     <form id="vokabeln_form">
         <table id="vokabeln_table" style="border: 1px solid black; margin: 1px; padding: 0px;">
+            <tr>
+                <td colspan="2">
+                    <progress id="progress_bar" value="0" max="100" style="width: 80%; height: 20px;">
+                    </progress>
+                    <span id="progress_text">Fortschritt: <span id="progress_value">0</span> von <span id="total_value">0</span></span>
+                </td>
+            </tr>
             <tr id="warning_row">
                 <td colspan="2">
                     <span id="warning_text">Bitte achte auf Gro&szlig;-/Kleinschreibung</span>
