@@ -63,6 +63,9 @@
         function proceed_to_next_word(latest_word, vokabeln) {
             if (vokabeln.length == 0) {
                 $('#firework').show();
+                anzahl_alle_vokabeln = 0;
+                i = 0;
+                adjust_progress_bar();
                 $('#vokabeln_form').hide();
                 setTimeout(function() {
                     $('#firework').hide();
@@ -87,6 +90,8 @@
         function adjust_progress_bar() {
             $('#progress_bar').attr('value', anzahl_alle_vokabeln - vokabeln.length);
             $('#progress_value').text(anzahl_alle_vokabeln - vokabeln.length);
+            $('#progress_bar').attr('max', anzahl_alle_vokabeln);
+            $('#total_value').text(anzahl_alle_vokabeln);
         }
 
         $(document).ready(function(){
@@ -117,10 +122,13 @@
                         $('#warning_row').show();
                         break;
                     case "wrong":
+                        vokabeln.push(vokabeln[i]);
                         $('#vokabeln_form').hide();
                         $('#error_message_text').text("Falsch! Die richtige Antwort ist: " + vokabeln[i].translation);
                         $('#error_message').show();
                         $('#error_message_ok').focus();
+                        anzahl_alle_vokabeln++;
+                        adjust_progress_bar();
                         break;
                 }
             }); 
