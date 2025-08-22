@@ -1,6 +1,6 @@
-# SecondNgProject
+# Vokabeln
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.
+Ein gemeinschaftsprojekt von Clemens Scharinger und Gerald Zukrigl. Ein Vokabeltrainer, der einfach praktisch ist. 
 
 ## Development server
 
