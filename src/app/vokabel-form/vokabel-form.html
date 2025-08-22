@@ -1,0 +1,35 @@
+    <form id="vokabeln_form" *ngIf="game() != null">
+        <table id="vokabeln_table" class="vokabel_table">
+            <tr>
+                <td colspan="2">
+                    <app-progress-bar [value]="solved_words_count()" [max]="total_words()"/>
+                </td>
+            </tr>
+            <tr id="warning_row" *ngIf="show_warning_row">
+                <td colspan="2">
+                    <span id="warning_text">Bitte achte auf Gro&szlig;-/Kleinschreibung</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Vokabel</td>
+                <td><input title="output" id="word_output" type="text" readonly [value]="current_word()"></td>
+            </tr>
+            <tr>
+                <td>Übersetzung</td>
+                <td *ngIf="!in_teaching_mode">
+                    <input title="input" id="translation_input" name="translation_input" type="text" [(ngModel)]="translation_input" (keydown.enter)="on_check_translation()" autofocus>
+                    <input title="button" id="teach_button" type="button" value="Lernen" (click)="on_teach()">
+                </td>
+                <td *ngIf="in_teaching_mode">
+                    <span>{{ current_translation() }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="button" *ngIf="!in_teaching_mode" id="check"    (click)="on_check_translation()">Check</button>
+                    <button type="button" *ngIf="in_teaching_mode"  id="continue" (click)="on_continue()">Weiter</button>
+                </td>
+            </tr>
+        </table>
+        
+    </form>

@@ -1,7 +1,6 @@
-@if(error_message_is_visible) {
-        <div id="error_message">
-        <div id="error_message_text">{{ error_message_text }}</div>
-        <button id="error_message_ok">Weiter</button>
-        <button id="false_error_message">Stimmt doch</button>
-    </div>
-}
+
+<div id="error_message">
+    <div id="error_message_text">{{ text() }}</div>
+    <button type="button" (click)="on_continue_click()" id="error_message_ok">Weiter</button>
+    <button type="button" (click)="on_override_to_correct_click()" id="false_error_message">Stimmt doch</button>
+</div>

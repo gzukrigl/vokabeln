@@ -1,51 +1,20 @@
 <h1>Vokabeln</h1>
-    <div id ="start_panel">
-        <div>
-            <label for="slider">Anzahl Wiederholungen:</label>
-            <input type="range" id="anzahl_wiederholungen" min="1" max="10" value="3" title="Anzahl Wiederholungen">
-            <span id="slider_value">3</span>
-        </div>
-        <div>
-            <input type="file" id="file_input" accept=".csv" title="CSV-Datei mit Vokabeln (Format: Wort;Übersetzung)">
-        </div>
-    </div>
+<app-start-panel 
+    *ngIf="aktive_maske == 'start_panel'" 
+    (on_start_game)="on_start_game($event)"
+></app-start-panel>
 
-    <form id="vokabeln_form">
-        <table id="vokabeln_table" style="border: 1px solid black; margin: 1px; padding: 0px;">
-            <tr>
-                <td colspan="2">
-                    <progress id="progress_bar" value="0" max="100" style="width: 80%; height: 20px;">
-                    </progress>
-                    <span id="progress_text">Fortschritt: <span id="progress_value">0</span> von <span id="total_value">0</span></span>
-                </td>
-            </tr>
-            <tr id="warning_row">
-                <td colspan="2">
-                    <span id="warning_text">Bitte achte auf Gro&szlig;-/Kleinschreibung</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Vokabel</td>
-                <td><input title="output" id="word_output" type="text" readonly value="cat"></td>
-            </tr>
-            <tr>
-                <td>Übersetzung</td>
-                <td>
-                    <input title="input" id="translation_input" type="text" value="">
-                    <span id="learn_value">Hier kommt der Lernmodus-Ausgaben-Text hin.</span>
-                    <input title="button" id="teach_button" type="button" value="Lernen">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button id="check">Check</button>
-                    <button id="continue">Weiter</button>
-                </td>
+<app-vokabel-form 
+    *ngIf="aktive_maske == 'vokabeln_form'" 
+    [game]="game"
+    (on_finish_game)="on_finish_game()"
+    (on_show_error_message)="on_show_error_message($event)"
+></app-vokabel-form>
 
-            </tr>
-        </table>
-        
-    </form>
-    <img src="feuerwerk.gif" id="firework" alt="Feuerwehr um das Fertigstellen zu feiern">
-
-    <app-errormessage [text]="error_message_text" [visible]="error_message_is_visible"></app-errormessage>
+<app-feuerwerk *ngIf="show_firework"></app-feuerwerk>
+<app-errormessage 
+    *ngIf="aktive_maske == 'error_message'" 
+    [text]="error_message_text" 
+    (on_override_to_correct)="on_override_error_message_to_correct()"
+    (on_continue)="on_continue_from_error_message()"
+></app-errormessage>
