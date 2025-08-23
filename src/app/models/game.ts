@@ -32,30 +32,6 @@ export class Game {
         console.log(result);
         return result;
     }
-    /*
-                  anzahl_wiederholungen = $('#anzahl_wiederholungen').val();
-                  console.log("Anzahl Wiederholungen:", anzahl_wiederholungen);
-                  einzelne_vokabeln.forEach(element => {
-                      for (let i = 0; i < anzahl_wiederholungen; i++) {
-                          vokabeln.push(element);
-                          vokabeln.push({word: element.translation, translation: element.word});
-                      }
-                  })
-
-                  console.log("Vokabeln geladen:", vokabeln);
-                  i = Math.floor(Math.random() * vokabeln.length);
-                  jQuery('#translation_input').val("");
-                  jQuery('#word_output').val(vokabeln[i].word);
-                  $('#vokabeln_form').show();
-                  $('#learn_button').show();
-                  $('#continue').hide();
-                  $('#start_panel').hide();
-                  $('#learn_value').hide();
-                  $('#progress_bar').attr('max', vokabeln.length);
-                  anzahl_alle_vokabeln = vokabeln.length;
-                  $('#total_value').text(anzahl_alle_vokabeln);
-
-    */
 
     getCurrentWord(): string {
         return this.vokabeln[this.i].word;

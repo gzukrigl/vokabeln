@@ -1,0 +1,7 @@
+.start_panel {
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* For inline text alignment */
+    /* height: 10vh;*/
+    background-color: #f0f0f0; /* Light gray background */
+}

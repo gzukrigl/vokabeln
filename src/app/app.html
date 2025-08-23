@@ -2,6 +2,7 @@
 <app-start-panel 
     *ngIf="aktive_maske == 'start_panel'" 
     (on_start_game)="on_start_game($event)"
+    id="start_panel"
 ></app-start-panel>
 
 <app-vokabel-form 
@@ -9,12 +10,16 @@
     [game]="game"
     (on_finish_game)="on_finish_game()"
     (on_show_error_message)="on_show_error_message($event)"
+    id="vokabeln_form"
 ></app-vokabel-form>
 
-<app-feuerwerk *ngIf="show_firework"></app-feuerwerk>
 <app-errormessage 
+    id="error_message"
     *ngIf="aktive_maske == 'error_message'" 
     [text]="error_message_text" 
     (on_override_to_correct)="on_override_error_message_to_correct()"
     (on_continue)="on_continue_from_error_message()"
-></app-errormessage>
+></app-errormessage> 
+
+<!-- <app-feuerwerk *ngIf="show_firework"></app-feuerwerk>-->
+<img *ngIf="show_firework" src="feuerwerk.gif" id="firework" alt="Feuerwehr um das Fertigstellen zu feiern">

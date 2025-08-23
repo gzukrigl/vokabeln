@@ -28,6 +28,7 @@
                 <td colspan="2">
                     <button type="button" *ngIf="!in_teaching_mode" id="check"    (click)="on_check_translation()">Check</button>
                     <button type="button" *ngIf="in_teaching_mode"  id="continue" (click)="on_continue()">Weiter</button>
+                    <button type="button" id="quit" (click)="on_quit()">Beenden</button>
                 </td>
             </tr>
         </table>

@@ -74,7 +74,6 @@ export class VokabelForm {
         this.show_warning_row = true;
         break;
       case "wrong":
-        game.addWrongAnswer();
         this.on_show_error_message.emit("Falsch! Die richtige Antwort ist: " + game.getCurrentTranslation())
         break;
       case "finished":
@@ -94,5 +93,9 @@ export class VokabelForm {
     let game = this.game();
     if (game == null) return;
     game.nextWord();
+  }
+
+  on_quit() {
+    this.on_finish_game.emit();
   }
 }

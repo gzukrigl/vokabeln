@@ -1,9 +1,10 @@
 import { Component, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Game } from '../models/game';
 
 @Component({
   selector: 'app-start-panel',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './start-panel.html',
   styleUrl: './start-panel.css'
 })

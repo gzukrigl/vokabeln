@@ -1,6 +1,17 @@
 
-<div id="error_message">
+<div 
+    id="error_message" 
+
+>
     <div id="error_message_text">{{ text() }}</div>
-    <button type="button" (click)="on_continue_click()" id="error_message_ok">Weiter</button>
+    <button 
+        type="button" 
+        (click)="on_continue_click()" 
+        id="error_message_ok" 
+        name="error_message_ok" 
+        autofocus
+    >Weiter</button>
     <button type="button" (click)="on_override_to_correct_click()" id="false_error_message">Stimmt doch</button>
 </div>
+
+<!-- TODO: (keydown.enter)="on_continue_click()" funktioniert noch nicht richtig. -->
