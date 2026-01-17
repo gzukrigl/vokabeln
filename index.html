@@ -157,6 +157,8 @@
             $('#false_error_message').click(function(event){
                 event.preventDefault();
                 vokabeln.splice(i,1);
+                vokabeln.splice(vokabeln.length-1,1);
+                anzahl_alle_vokabeln -= 1;
                 i = proceed_to_next_word(latest_word, vokabeln);
             });
             
