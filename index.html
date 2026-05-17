@@ -215,7 +215,7 @@
                     case "wrong":
                         vokabeln.push(vokabeln[i]);
                         $('#vokabeln_form').hide();
-                        $('#error_message_text').text("Falsch! Die richtige Antwort ist: " + vokabeln[i].translation);
+                        $('#error_message_text').text(vokabeln[i].translation);
                         $('#error_message').show();
                         $('#error_message_ok').focus();
                         anzahl_alle_vokabeln++;
@@ -364,6 +364,8 @@
     </form>
     <img src="feuerwerk.gif" id="firework" alt="Feuerwehr um das Fertigstellen zu feiern">
     <div id="error_message">
+        Falsch: Die richtige Antwort ist:
+        <br/>
         <div id="error_message_text">Blödmann!</div>
         <button id="error_message_ok">Weiter</button>
         <button id="false_error_message">Stimmt doch</button>
