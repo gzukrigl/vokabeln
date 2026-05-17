@@ -6,20 +6,75 @@
         <link rel="stylesheet" href="main.css">
      <script>
         function input_is_ok(input_text, correct_answer) {
-            let correct_answers = correct_answer.split(",");
-            for(let i = 0; i < correct_answers.length; i++) {            
-                single_correct_answer = correct_answers[i].trim();  
-                if (single_correct_answer.startsWith('to ')) {
-                    single_correct_answer = single_correct_answer.substring(3).trim();
+            function normalizeText(text) {
+                return text.replace(/\s+/g, " ").trim();
+            }
+
+            function stripToPrefix(text) {
+                const normalized = normalizeText(text);
+                return normalized.toLowerCase().startsWith("to ") ? normalized.substring(3).trim() : normalized;
+            }
+
+            function expandParenthesesVariants(text) {
+                const start = text.indexOf("(");
+                if (start === -1) {
+                    return [normalizeText(text)];
                 }
-                if (input_text.startsWith('to ')) {
-                    input_text = input_text.substring(3).trim();
+                const end = text.indexOf(")", start);
+                if (end === -1) {
+                    return [normalizeText(text)];
                 }
-                if (input_text.toLowerCase() == single_correct_answer.toLowerCase()) {
-                    if(input_text == single_correct_answer) {
-                        return "correct";
-                    } else {
-                        return "warning";
+
+                const prefix = text.slice(0, start);
+                const optional = text.slice(start + 1, end);
+                const suffix = text.slice(end + 1);
+
+                const withOption = normalizeText(prefix + optional + suffix);
+                const withoutOption = normalizeText(prefix + suffix);
+
+                return [
+                    ...expandParenthesesVariants(withOption),
+                    ...expandParenthesesVariants(withoutOption)
+                ];
+            }
+
+            function expandSlashVariants(text) {
+                const tokens = normalizeText(text).split(" ");
+                let variants = [[]];
+                for (const token of tokens) {
+                    const alternatives = token.split("/");
+                    const nextVariants = [];
+                    for (const variant of variants) {
+                        for (const alt of alternatives) {
+                            nextVariants.push([...variant, alt]);
+                        }
+                    }
+                    variants = nextVariants;
+                }
+                return variants.map(parts => normalizeText(parts.join(" ")));
+            }
+
+            function expandAnswerVariants(answer) {
+                const parenthesisVariants = expandParenthesesVariants(answer);
+                const expanded = new Set();
+                for (const variant of parenthesisVariants) {
+                    for (const slashVariant of expandSlashVariants(variant)) {
+                        expanded.add(slashVariant);
+                    }
+                }
+                return Array.from(expanded);
+            }
+
+            const inputStripped = stripToPrefix(input_text);
+            const answerBlocks = correct_answer.split(",");
+
+            for (let i = 0; i < answerBlocks.length; i++) {
+                const block = answerBlocks[i].trim();
+                const variants = expandAnswerVariants(block);
+                for (const variant of variants) {
+                    const variantStripped = stripToPrefix(variant);
+                    if (inputStripped.toLowerCase() === variantStripped.toLowerCase()) {
+                        return inputStripped === variantStripped ? "correct" : "warning";
                     }
                 }
             }
@@ -27,17 +82,52 @@
         }
 
         function test_input_is_ok() {
-            console.log(input_is_ok("Katze", "Katze")=="correct");
-            console.log(input_is_ok("cat", "Katze, cat, Katze")=="correct");
-            console.log(input_is_ok("Katze", "Katze, cat, Katze")=="correct");
-            console.log(input_is_ok("Katze", "Katze, Hund, Katze")=="correct");
-            console.log(input_is_ok("Hund", "Katze, Hund, Katze")=="correct");
-            console.log(input_is_ok("to speak", "to talk, to speak")=="correct");
-            console.log(input_is_ok("laufen", "laufen, to run")=="correct");
-            console.log(input_is_ok("Clemens", "Gerald")=="wrong");
-            console.log(input_is_ok("kaTze", "Katze")=="warning");
-            console.log(input_is_ok("kaTze", "Hund, Katze")=="warning");
+            const tests = [
+                { input: "Katze", answer: "Katze", expected: "correct" },
+                { input: "cat", answer: "Katze, cat, Katze", expected: "correct" },
+                { input: "Katze", answer: "Katze, cat, Katze", expected: "correct" },
+                { input: "Katze", answer: "Katze, Hund, Katze", expected: "correct" },
+                { input: "Hund", answer: "Katze, Hund, Katze", expected: "correct" },
+                { input: "to speak", answer: "to talk, to speak", expected: "correct" },
+                { input: "laufen", answer: "laufen, to run", expected: "correct" },
+                { input: "Clemens", answer: "Gerald", expected: "wrong" },
+                { input: "kaTze", answer: "Katze", expected: "warning" },
+                { input: "kaTze", answer: "Hund, Katze", expected: "warning" },
+                { input: "unterhalten", answer: "(sich) unterhalten", expected: "correct" },
+                { input: "sich unterhalten", answer: "(sich) unterhalten", expected: "correct" },
+                { input: "Unterhalten", answer: "(sich) unterhalten", expected: "warning" },
+                { input: "sich Unterhalten", answer: "(sich) unterhalten", expected: "warning" },
+                { input: "laufen", answer: "(sich) unterhalten", expected: "wrong" },
+                { input: "sich verlaufen", answer: "sich verirren/verlaufen", expected: "correct" },
+                { input: "sich verirren", answer: "sich verirren/verlaufen", expected: "correct" },
+                { input: "Sich verlaufen", answer: "sich verirren/verlaufen", expected: "warning" },
+                { input: "sich verlor", answer: "sich verirren/verlaufen", expected: "wrong" },
+                { input: "verlaufen", answer: "(sich) verirren/verlaufen", expected: "correct" },
+                { input: "sich verlaufen", answer: "(sich) verirren/verlaufen", expected: "correct" },
+                { input: "verirren", answer: "(sich) verirren/verlaufen", expected: "correct" },
+                { input: "Sich Verirren", answer: "(sich) verirren/verlaufen", expected: "warning" },
+                { input: "sich verfährt", answer: "(sich) verirren/verlaufen", expected: "wrong" },
+                { input: "fortlaufen", answer: "(sich) verirren/verlaufen, weglaufen/fortlaufen", expected: "correct" },
+                { input: "sich verlaufen", answer: "(sich) verirren/verlaufen, weglaufen/fortlaufen", expected: "correct" },
+                { input: "Weglaufen", answer: "(sich) verirren/verlaufen, weglaufen/fortlaufen", expected: "warning" },
+                { input: "sich verbringen", answer: "(sich) verirren/verlaufen, weglaufen/fortlaufen", expected: "wrong" }
+            ];
 
+            let failed = 0;
+            for (const test of tests) {
+                const result = input_is_ok(test.input, test.answer);
+                const passed = result === test.expected;
+                if (!passed) {
+                    failed += 1;
+                    console.log(`${passed ? "PASS" : "FAIL"}: input='${test.input}' answer='${test.answer}' expected='${test.expected}' got='${result}'`);
+
+                }
+            }
+            if (failed > 0) {
+                console.error(`test_input_is_ok: ${failed} failed test(s)`);
+            } else {
+                console.log("test_input_is_ok: all tests passed");
+            }
         }   
 
         function are_all_words_identical(vokabeln) {
